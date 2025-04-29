@@ -110,27 +110,24 @@ class Doublelinkedlist:
               return current_node
       return None
 
-  # --- Métodos específicos para la práctica ---
+ 
 
-  def dar_paso_preferencial(self): # Requerimiento 2 [cite: 8]
-      # Mueve motos con prioridad 1 al frente
+  def dar_paso_preferencial(self):
       current_node = self.head
-      nodes_to_move = []
+  
       while current_node is not None:
-          next_node_to_check = current_node.next
+          next_node = current_node.next  # Guardamos el siguiente antes de eliminar
+  
           if current_node.value['tipo'] == 'moto' and current_node.value['prioridad'] == 1:
-              # No removemos y añadimos directamente para evitar problemas con la iteración
-              # Recolectamos los nodos a mover después de quitarlos de la lista
-              nodes_to_move.append(self._remove_node(current_node))
-          current_node = next_node_to_check
+              # Guardamos el valor antes de eliminar el nodo
+              vehiculo = current_node.value
+              self._remove_node(current_node)
+              self.prepend(vehiculo)  # Lo ponemos al frente
+          current_node = next_node
 
-      # Insertamos al inicio todos los nodos recolectados (en orden inverso para mantener el relativo)
-      for node_to_move in reversed(nodes_to_move):
-          if node_to_move:
-              self.prepend(node_to_move.value)
 
-  def eliminar_camiones_inspeccion(self): # Requerimiento 3 [cite: 8]
-      # Elimina camiones con prioridad mayor a 3
+  def eliminar_camiones_inspeccion(self): 
+      
       current_node = self.head
       while current_node is not None:
           next_node_to_check = current_node.next
@@ -138,7 +135,7 @@ class Doublelinkedlist:
               self._remove_node(current_node)
           current_node = next_node_to_check
 
-  def simular_accidente(self, placa1, placa2): # Requerimiento 4 [cite: 9]
+  def simular_accidente(self, placa1, placa2): 
       # Elimina vehículos entre dos placas dadas
       node1 = self.find_node_by_plate(placa1)
       node2 = self.find_node_by_plate(placa2)
@@ -147,7 +144,7 @@ class Doublelinkedlist:
           print(f"Error: No se encontró una o ambas placas ({placa1}, {placa2})")
           return
 
-      # Determinar cuál nodo va primero en la lista para saber el rango
+     
       start_node, end_node = None, None
       temp = self.head
       order_found = False
@@ -168,7 +165,7 @@ class Doublelinkedlist:
           print("Error al determinar el orden de los nodos para el accidente.")
           return
 
-      # Eliminar nodos entre start_node (exclusive) y end_node (exclusive)
+   
       current = start_node.next
       while current and current != end_node:
           next_to_process = current.next
@@ -176,7 +173,7 @@ class Doublelinkedlist:
           current = next_to_process
 
 
-  def invertir_via_si_mas_autos(self): # Requerimiento 5 [cite: 10]
+  def invertir_via_si_mas_autos(self): 
       # Invierte la lista si hay más autos que motos
       count_autos = 0
       count_motos = 0
@@ -198,60 +195,56 @@ class Doublelinkedlist:
               next_node = current.next
               current.next = prev_node
               current.prev = next_node
-              # Moverse al siguiente nodo en la lista original
+              
               prev_node = current
               current = next_node
 
-          # El último nodo procesado (antigua cola) es la nueva cabeza
+         
           self.head = prev_node
       else:
           print("No se invierte la vía (no hay más autos que motos).")
 
 
-  def reorganizar_por_prioridad(self): # Requerimiento 6 [cite: 11]
-      # Reorganiza usando Insertion Sort in-place (sin estructuras auxiliares)
+  def reorganizar_por_prioridad(self): 
+      
       if self.is_empty() or self.size == 1:
           return # Ya está ordenada
 
-      sorted_marker = self.head # El primer nodo se considera la parte "ordenada"
-      current_node = self.head.next # Empezamos a insertar desde el segundo nodo
+      sorted_marker = self.head 
+      current_node = self.head.next 
 
       while current_node is not None:
           next_to_consider = current_node.next # Guardamos el siguiente antes de mover current_node
 
-          # Si el nodo actual ya está en la posición correcta respecto al marcador ordenado
+         
           if current_node.value['prioridad'] >= sorted_marker.value['prioridad']:
               sorted_marker = current_node
           else:
-              # Desconectar el nodo actual para moverlo
+              
               prev_c = current_node.prev
               next_c = current_node.next # Ya lo teníamos en next_to_consider
 
               prev_c.next = next_c
               if next_c is not None:
                   next_c.prev = prev_c
-              else: # Si current_node era la cola, la nueva cola es su previo
+              else: 
                   self.tail = prev_c
 
               current_node.prev = None
               current_node.next = None
-              # Buscar dónde insertar el current_node en la parte ordenada (desde head hasta sorted_marker)
+              
               insertion_point = self.head
               while insertion_point != next_to_consider and insertion_point.value['prioridad'] <= current_node.value['prioridad']:
                  insertion_point = insertion_point.next
 
-              # Insertar current_node antes de insertion_point
+             
               if insertion_point is None: # Insertar al final (relativamente, antes de next_to_consider si no es None)
-                 # Este caso ocurre si el nodo debe ir justo después del marcador ordenado (prev_c)
-                 # O si debe ser la nueva cola.
-                 # Re-enlazar después de prev_c (que era el nodo antes de current_node)
-                 # Si next_c era None (current_node era la cola original), prev_c es la nueva cola temporalmente
                  prev_c.next = current_node
                  current_node.prev = prev_c
-                 # Si next_c era None, current_node se convierte en la nueva cola
+               
                  if next_c is None:
                     self.tail = current_node
-                 # Si next_c no era None, el next de current_node debe ser next_c
+                 
                  else:
                      current_node.next = next_c
                      next_c.prev = current_node
@@ -268,12 +261,12 @@ class Doublelinkedlist:
                   current_node.next = insertion_point
                   insertion_point.prev = current_node
 
-              # No actualizamos size porque solo movimos nodos
+              
 
-          # Mover al siguiente nodo original para considerarlo
+          
           current_node = next_to_consider
 
-  # --- Método auxiliar para generar datos de prueba ---
+ 
   def generate_random_vehicles(self, num_vehicles):
       # Genera vehículos aleatorios para pruebas
       tipos = ['auto', 'moto', 'camion']
