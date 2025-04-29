@@ -26,13 +26,13 @@ if __name__ == "__main__":
     print(via)
     print("-" * 30)
 
-    # Requerimiento 3: Eliminar camiones con prioridad > 3 
+   
     print("--- Requerimiento 3: Eliminar camiones P > 3 ---")
     via.eliminar_camiones_inspeccion()
     print(via)
     print("-" * 30)
 
-    # Requerimiento 4: Simular accidente Aseguramos que existan placas para la prueba (pueden haber sido eliminadas antes)
+ 
     if not via.find_node_by_plate("V003"):
         via.append({'placa': 'V003', 'tipo': 'auto', 'prioridad': 2})
     if not via.find_node_by_plate("V007"):
@@ -45,13 +45,13 @@ if __name__ == "__main__":
     print(via)
     print("-" * 30)
 
-    Requerimiento 5: Invertir si hay más autos que motos 
+ 
     print("--- Requerimiento 5: Intentar invertir vía si más autos que motos ---")
     via.invertir_via_si_mas_autos()
     print(via)
     print("-" * 30)
 
-    # Requerimiento 6: Reorganizar por prioridad 
+  
     print("--- Requerimiento 6: Reorganizar por prioridad (sin estructuras auxiliares) ---")
     via.reorganizar_por_prioridad()
     print(via)
