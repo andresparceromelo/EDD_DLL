@@ -57,7 +57,7 @@ class Doublelinkedlist:
       self.head = newnode
     self.size += 1
 
-  def append(self,value): # Requerimiento 1: Insertar vehículos al final [cite: 8]
+  def append(self,value):
     newnode = node(value)
     if self.is_empty():
       self.head = newnode
@@ -69,7 +69,6 @@ class Doublelinkedlist:
     self.size += 1
 
   def _remove_node(self, node_to_remove):
-    # Función interna para eliminar un nodo de forma segura
     if node_to_remove is None:
         return None
 
@@ -92,19 +91,16 @@ class Doublelinkedlist:
     return node_to_remove
 
   def popfirst(self):
-    # Elimina y retorna el primer nodo
     if self.is_empty():
         return None
     return self._remove_node(self.head)
 
   def pop(self):
-    # Elimina y retorna el último nodo
     if self.is_empty():
         return None
     return self._remove_node(self.tail)
 
   def find_node_by_plate(self, placa):
-      # Busca un nodo por la placa del vehículo
       for current_node in self:
           if current_node.value['placa'] == placa:
               return current_node
@@ -116,10 +112,10 @@ class Doublelinkedlist:
       current_node = self.head
   
       while current_node is not None:
-          next_node = current_node.next  # Guardamos el siguiente antes de eliminar
+          next_node = current_node.next  
   
           if current_node.value['tipo'] == 'moto' and current_node.value['prioridad'] == 1:
-              # Guardamos el valor antes de eliminar el nodo
+              
               vehiculo = current_node.value
               self._remove_node(current_node)
               self.prepend(vehiculo)  # Lo ponemos al frente
@@ -136,7 +132,6 @@ class Doublelinkedlist:
           current_node = next_node_to_check
 
   def simular_accidente(self, placa1, placa2): 
-      # Elimina vehículos entre dos placas dadas
       node1 = self.find_node_by_plate(placa1)
       node2 = self.find_node_by_plate(placa2)
 
@@ -174,7 +169,6 @@ class Doublelinkedlist:
 
 
   def invertir_via_si_mas_autos(self): 
-      # Invierte la lista si hay más autos que motos
       count_autos = 0
       count_motos = 0
       for node in self:
@@ -187,11 +181,9 @@ class Doublelinkedlist:
           print("Invirtiendo vía (más autos que motos)...")
           current = self.head
           prev_node = None
-          # La antigua cabeza será la nueva cola
           self.tail = self.head
 
           while current:
-              # Intercambio de punteros prev y next
               next_node = current.next
               current.next = prev_node
               current.prev = next_node
@@ -222,7 +214,7 @@ class Doublelinkedlist:
           else:
               
               prev_c = current_node.prev
-              next_c = current_node.next # Ya lo teníamos en next_to_consider
+              next_c = current_node.next 
 
               prev_c.next = next_c
               if next_c is not None:
@@ -238,7 +230,7 @@ class Doublelinkedlist:
                  insertion_point = insertion_point.next
 
              
-              if insertion_point is None: # Insertar al final (relativamente, antes de next_to_consider si no es None)
+              if insertion_point is None: 
                  prev_c.next = current_node
                  current_node.prev = prev_c
                
@@ -250,11 +242,11 @@ class Doublelinkedlist:
                      next_c.prev = current_node
 
 
-              elif insertion_point.prev is None: # Insertar al principio (nuevo head)
+              elif insertion_point.prev is None: 
                   current_node.next = self.head
                   self.head.prev = current_node
                   self.head = current_node
-              else: # Insertar en medio de la parte ordenada
+              else: 
                   prev_insertion = insertion_point.prev
                   prev_insertion.next = current_node
                   current_node.prev = prev_insertion
@@ -268,7 +260,7 @@ class Doublelinkedlist:
 
  
   def generate_random_vehicles(self, num_vehicles):
-      # Genera vehículos aleatorios para pruebas
+     
       tipos = ['auto', 'moto', 'camion']
       for i in range(num_vehicles):
           placa = f"V{i+1:03d}"
